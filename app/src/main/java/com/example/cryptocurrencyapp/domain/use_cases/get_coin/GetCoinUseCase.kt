@@ -19,15 +19,15 @@ class GetCoinUseCase @Inject constructor(
     @OptIn(InternalCoroutinesApi::class)
     operator fun invoke(coinId: String):Flow<Resource<CoinDetail>> = flow {
         try {
-            emit(Resource.Loading())
+            emit(Resource.Loading<CoinDetail>())
             val coin = repository.getCoinById(coinId).toCoinDetail()
             emit(Resource.Sucess(coin))
 
         } catch ( e: HttpException){
-            emit(Resource.Error(e.localizedMessage?: "An unexpected error occured!"))
+            emit(Resource.Error<CoinDetail>(e.localizedMessage?: "An unexpected error occured!"))
 
         } catch (e: IOException){
-            emit(Resource.Error("Opps! Server couldn't be reached. Please check your internet connection!"))
+            emit(Resource.Error<CoinDetail>("Opps! Server couldn't be reached. Please check your internet connection!"))
 
         }
     }
